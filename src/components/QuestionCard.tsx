@@ -67,7 +67,7 @@ const QuestionCard = ({ ques }: { ques: Question }) => {
 
           <div className="ml-auto flex items-center gap-1">
             <img
-              src={avatars.getInitials(ques.author.name, 24, 24)}
+              src={avatars.getInitials(ques.author.name, 24, 24).toString()}
               alt={ques.author.name}
               className="rounded-lg"
             />

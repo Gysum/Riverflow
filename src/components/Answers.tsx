@@ -1,90 +1,154 @@
 "use client";
 
+import { ID, Models } from "appwrite";
 import React from "react";
-import { BorderBeam } from "./magicui/border-beam";
-import Link from "next/link";
-import { Models } from "appwrite";
+import VoteButtons from "./VoteButton";
+import { useAuthStore } from "@/store/Auth";
+import { avatars, databases } from "@/models/client/config";
+import { answerCollection, db } from "@/models/name";
+import RTE, { MarkdownPreview } from "./RTE";
+import Comments from "./Comments";
 import slugify from "@/utils/slugify";
-import { avatars } from "@/models/client/config";
-import convertDateToRelativeTime from "@/utils/relativeTime";
+import Link from "next/link";
+import { IconTrash } from "@tabler/icons-react";
 
-interface Author {
-  $id: string;
-  name: string;
-  reputation: number;
-  imageUrl?: string;
-}
+const Answers = ({
+  answers: _answers,
+  questionId,
+}: {
+  answers: Models.DocumentList<Models.Document>;
+  questionId: string;
+}) => {
+  const [answers, setAnswers] = React.useState(_answers);
+  const serializedAnswers = React.useMemo(
+    () => JSON.parse(JSON.stringify(answers)),
+    [answers],
+  );
+  const [newAnswer, setNewAnswer] = React.useState("");
+  const { user } = useAuthStore();
 
-export interface Question extends Models.Document {
-  title: string;
-  content: string;
-  totalVotes: number;
-  totalAnswers: number;
-  author: Author;
-  authorId: string;
-  tags: string[];
-}
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!newAnswer || !user) return;
 
-const QuestionCard = ({ ques }: { ques: Question }) => {
-  const [height, setHeight] = React.useState(0);
-  const ref = React.useRef<HTMLDivElement>(null);
+    try {
+      const response = await fetch("/api/answer", {
+        method: "POST",
+        body: JSON.stringify({
+          questionId: questionId,
+          answer: newAnswer,
+          authorId: user.$id,
+        }),
+      });
 
-  React.useEffect(() => {
-    if (ref.current) {
-      setHeight(ref.current.clientHeight);
+      const data = await response.json();
+
+      if (!response.ok) throw data;
+
+      setNewAnswer(() => "");
+      setAnswers(prev => ({
+        total: prev.total + 1,
+        documents: [
+          {
+            ...data,
+            author: user,
+            upvotesDocuments: { documents: [], total: 0 },
+            downvotesDocuments: { documents: [], total: 0 },
+            comments: { documents: [], total: 0 },
+          },
+          ...prev.documents,
+        ],
+      }));
+    } catch (error: any) {
+      window.alert(error?.message || "Error creating answer");
     }
-  }, [ref]);
+  };
+
+  const deleteAnswer = async (answerId: string) => {
+    try {
+      const response = await fetch("/api/answer", {
+        method: "DELETE",
+        body: JSON.stringify({
+          answerId: answerId,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) throw data;
+
+      setAnswers(prev => ({
+        total: prev.total - 1,
+        documents: prev.documents.filter(answer => answer.$id !== answerId),
+      }));
+    } catch (error: any) {
+      window.alert(error?.message || "Error deleting answer");
+    }
+  };
 
   return (
-    <div
-      ref={ref}
-      className="relative flex flex-col gap-4 overflow-hidden rounded-xl border border-white/20 bg-white/5 p-4 duration-200 hover:bg-white/10 sm:flex-row"
-    >
-      <BorderBeam size={height} duration={12} delay={9} />
-      <div className="relative shrink-0 text-sm sm:text-right">
-        <p>{ques.totalVotes} votes</p>
-        <p>{ques.totalAnswers} answers</p>
-      </div>
-      <div className="relative w-full">
-        <Link
-          href={`/questions/${ques.$id}/${slugify(ques.title)}`}
-          className="text-orange-500 duration-200 hover:text-orange-600"
-        >
-          <h2 className="text-xl">{ques.title}</h2>
-        </Link>
-        <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
-          {ques.tags.map((tag: string) => (
-            <Link
-              key={tag}
-              href={`/questions?tag=${tag}`}
-              className="inline-block rounded-lg bg-white/10 px-2 py-0.5 duration-200 hover:bg-white/20"
-            >
-              #{tag}
-            </Link>
-          ))}
-          <div className="ml-auto flex items-center gap-1">
-            <picture>
-              <img
-                src={avatars.getInitials(ques.author.name, 24, 24)}
-                alt={ques.author.name}
-                className="rounded-lg"
-              />
-            </picture>
-            <Link
-              href={`/users/${ques.author.$id}/${slugify(ques.author.name)}`}
-              className="text-orange-500 hover:text-orange-600"
-            >
-              {ques.author.name}
-            </Link>
-            <strong>&quot;{ques.author.reputation}&quot;</strong>
+    <>
+      <h2 className="mb-4 text-xl">{answers.total} Answers</h2>
+      {serializedAnswers.documents.map((answer: any) => (
+        <div key={answer.$id} className="flex gap-4">
+          <div className="flex shrink-0 flex-col items-center gap-4">
+            <VoteButtons
+              type="answer"
+              id={answer.$id}
+              upvotes={answer.upvotesDocuments}
+              downvotes={answer.downvotesDocuments}
+            />
+            {user?.$id === answer.authorId ? (
+              <button
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-red-500 p-1 text-red-500 duration-200 hover:bg-red-500/10"
+                onClick={() => deleteAnswer(answer.$id)}
+              >
+                <IconTrash className="h-4 w-4" />
+              </button>
+            ) : null}
           </div>
-          <span>
-            asked {convertDateToRelativeTime(new Date(ques.$createdAt))}
-          </span>
+          <div className="w-full overflow-auto">
+            <MarkdownPreview className="rounded-xl p-4" source={answer.content} />
+            <div className="mt-4 flex items-center justify-end gap-1">
+              <picture>
+                <img
+                  src={avatars.getInitials(answer.author.name, 36, 36).toString()}
+                  alt={answer.author.name}
+                  className="rounded-lg"
+                />
+              </picture>
+              <div className="block leading-tight">
+                <Link
+                  href={`/users/${answer.author.$id}/${slugify(answer.author.name)}`}
+                  className="text-orange-500 hover:text-orange-600"
+                >
+                  {answer.author.name}
+                </Link>
+                <p>
+                  <strong>{answer.author.reputation}</strong>
+                </p>
+              </div>
+            </div>
+            <Comments
+              comments={answer.comments}
+              className="mt-4"
+              type="answer"
+              typeId={answer.$id}
+            />
+            <hr className="my-4 border-white/40" />
+          </div>
         </div>
-      </div>
-    </div>
+      ))}
+      <hr className="my-4 border-white/40" />
+      <form onSubmit={handleSubmit} className="space-y-2">
+        <h2 className="mb-4 text-xl">Your Answer</h2>
+        <RTE value={newAnswer} onChange={value => setNewAnswer(() => value || "")} />
+        <button className="shrink-0 rounded bg-orange-500 px-4 py-2 font-bold text-white hover:bg-orange-600">
+          Post Your Answer
+        </button>
+      </form>
+    </>
   );
 };
 
-export default QuestionCard;
+export default Answers;

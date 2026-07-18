@@ -18,6 +18,7 @@ import {
   questionCollection,
 } from "@/models/name";
 import { Confetti } from "@/components/magicui/confetti";
+import { Button } from "@/components/ui/button";
 
 interface QuestionDocument extends Models.Document {
   title: string;
@@ -63,6 +64,15 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
+
+  React.useEffect(() => {
+    if (user?.$id) {
+      setFormData((prev) => ({
+        ...prev,
+        authorId: user.$id,
+      }));
+    }
+  }, [user]);
 
   const loadConfetti = (timeInMS = 3000) => {
     const end = Date.now() + timeInMS;
@@ -163,6 +173,9 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    console.log("User:", user);
+    console.log("Form Data:", formData);
 
     if (!formData.title || !formData.content || !formData.authorId) {
       setError("Please fill out all fields");
@@ -295,9 +308,17 @@ const QuestionForm = ({ question }: { question?: QuestionDocument }) => {
         </div>
       </LabelInputContainer>
 
-      <button type="submit" disabled={loading}>
-        {question ? "Update" : "Publish"}
-      </button>
+      <Button
+        type="submit"
+        disabled={loading}
+        className="w-full"
+      >
+        {loading
+          ? "Publishing..."
+          : question
+            ? "Update Question"
+            : "Publish Question"}
+      </Button>
     </form>
   );
 };

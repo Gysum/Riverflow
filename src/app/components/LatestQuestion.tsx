@@ -8,13 +8,29 @@ import {
 import { databases, users } from "@/models/server/config";
 import { UserPrefs } from "@/store/Auth";
 import { Query } from "node-appwrite";
+import { Models } from "node-appwrite";
 import React from "react";
 
+interface Question extends Models.Document {
+  title: string;
+  content: string;
+  tags: string[];
+  totalVotes: number;
+  totalAnswers: number;
+  authorId: string;
+  author: {
+    $id: string;
+    name: string;
+    reputation: number;
+  };
+}
+
 const LatestQuestions = async () => {
-  const questions = await databases.listDocuments(db, questionCollection, [
-    Query.limit(5),
-    Query.orderDesc("$createdAt"),
-  ]);
+  const questions = await databases.listDocuments<Question>(
+    db,
+    questionCollection,
+    [Query.limit(5), Query.orderDesc("$createdAt")],
+  );
   console.log("Fetched Questions:", questions);
 
   questions.documents = await Promise.all(

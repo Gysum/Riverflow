@@ -23,7 +23,7 @@ const Notification = ({ user }: { user: Models.User<UserPrefs> }) => {
       <div className="flex flex-row items-center gap-3">
         <picture>
           <img
-            src={avatars.getInitials(user.name, 40, 40)}
+            src={avatars.getInitials(user.name, 40, 40).toString()}
             alt={user.name}
             className="rounded-2xl"
           />
