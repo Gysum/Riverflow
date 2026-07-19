@@ -186,12 +186,11 @@ const Page = async ({
             />
             <picture>
               <img
-                src={storage.getFilePreview(
-                  questionAttachmentBucket,
-                  question.attachmentId,
-                ).toString()}
+                src={storage
+                  .getFileView(questionAttachmentBucket, question.attachmentId)
+                  .toString()}
                 alt={question.title}
-                className="mt-3 rounded-lg"
+                className="w-full max-w-4xl rounded-xl border border-neutral-700 object-contain"
               />
             </picture>
             <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
