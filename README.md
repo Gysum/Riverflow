@@ -1,36 +1,247 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌊 Riverflow
 
-## Getting Started
+> A modern developer Q&A platform inspired by Stack Overflow, built with Next.js, TypeScript, Tailwind CSS, and Appwrite.
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss)
+![Appwrite](https://img.shields.io/badge/Appwrite-F02E65?style=for-the-badge&logo=appwrite)
+
+---
+
+## 📖 About
+
+Riverflow is a full-stack developer community platform where developers can ask programming questions, post answers, share knowledge, and interact through voting and comments.
+
+It provides a modern, responsive experience with secure authentication, markdown support, image attachments, and real-time community interactions.
+
+---
+
+## ✨ Features
+
+### 👤 Authentication
+
+- Secure user authentication with Appwrite
+- Login & Signup
+- Protected routes
+- User profiles
+
+### ❓ Questions
+
+- Ask programming questions
+- Rich Markdown editor
+- Upload image attachments
+- Add tags
+- Edit/Delete your questions
+
+### 💬 Answers
+
+- Post answers
+- Rich Markdown support
+- Community discussions
+
+### 👍 Voting System
+
+- Upvote questions
+- Downvote questions
+- Upvote answers
+- Downvote answers
+
+### 💭 Comments
+
+- Comment on questions
+- Comment on answers
+
+### 🔍 Search
+
+- Search questions
+- Browse latest discussions
+
+### 🎨 Modern UI
+
+- Fully responsive
+- Dark theme
+- Clean developer-friendly interface
+
+---
+
+# 🛠 Tech Stack
+
+| Technology | Usage |
+|------------|-------|
+| Next.js 16 | Full Stack Framework |
+| React 19 | UI Development |
+| TypeScript | Type Safety |
+| Tailwind CSS | Styling |
+| Appwrite | Authentication, Database & Storage |
+| React Hook Form | Forms |
+| Zod | Validation |
+| React Markdown | Markdown Rendering |
+| Lucide Icons | Icons |
+
+---
+
+# 📂 Project Structure
+
+```
+src/
+│
+├── app/
+├── components/
+├── constants/
+├── hooks/
+├── lib/
+├── models/
+├── providers/
+├── styles/
+├── types/
+└── utils/
+```
+
+---
+
+# 🚀 Getting Started
+
+## Clone Repository
+
+```bash
+git clone https://github.com/your-username/riverflow.git
+
+cd riverflow
+```
+
+## Install Dependencies
+
+```bash
+npm install
+```
+
+## Configure Environment Variables
+
+Create a `.env.local` file.
+
+```env
+NEXT_PUBLIC_APPWRITE_HOST_URL=
+NEXT_PUBLIC_APPWRITE_PROJECT_ID=
+APPWRITE_API_KEY=
+
+```
+
+---
+
+## Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# 📸 Screenshots
 
-To learn more about Next.js, take a look at the following resources:
+## Home Page
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![Home Page](public/images/home-page(1).png)
+![Home Page](public/images/home-page-(2).png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Question Details
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![Question Details](public/images/question-details.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Ask Question
+
+![Ask Question](public/images/ask-question.png)
+
+---
+
+## Register
+![Register](public/images/signUp-page.png)
+---
+
+## Login
+
+![Login](public/images/login-page.png)
+
+---
+
+## Profile
+
+![Profile(Summary)](public/images/profile-page(summary).png)
+![Profile(Questions)](public/images/profile-page(questions).png)
+![Profile(Answers)](public/images/profile-page(answers).png)
+![Profile(Votes)](public/images/profile-page(votes).png)
+
+---
+
+# 🎥 Demo
+
+Will be available soon
+
+---
+
+# 🔥 Future Improvements
+
+- Notification System
+- Reputation Points
+- Accepted Answers
+- Bookmarks
+- Rich User Profiles
+- Badges & Achievements
+- Infinite Scrolling
+- AI-powered Question Suggestions
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+2. Create a feature branch
+
+```bash
+git checkout -b feature-name
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Added new feature"
+```
+
+4. Push
+
+```bash
+git push origin feature-name
+```
+
+5. Open a Pull Request
+
+---
+
+# 👨‍💻 Author
+
+**Aakash Pathrikar**
+
+- GitHub: https://github.com/Gysum
+- LinkedIn: https://linkedin.com/in/aakash-pathrikar
+
+---
+
+# ⭐ Show Your Support
+
+If you like this project, consider giving it a ⭐ on GitHub!
+
+It motivates me to build more open-source projects.
+
