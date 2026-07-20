@@ -2,6 +2,7 @@ import { db, questionCollection } from "@/models/name";
 import { databases } from "@/models/server/config";
 import React from "react";
 import EditQues from "./EditQues";
+import { Question } from "./EditQues";
 
 const Page = async ({
   params,
@@ -9,7 +10,7 @@ const Page = async ({
   params: Promise<{ quesId: string; quesName: string }>;
 }) => {
   const { quesId } = await params;
-  const question = await databases.getDocument(
+  const question = await databases.getDocument<Question>(
     db,
     questionCollection,
     quesId,

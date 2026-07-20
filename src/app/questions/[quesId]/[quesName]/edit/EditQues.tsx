@@ -20,6 +20,7 @@ export interface Question extends Models.Document {
   tags: string[];
   totalVotes: number;
   totalAnswers: number;
+  attachmentId: string;
   authorId: string;
   author: Author;
 }
