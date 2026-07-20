@@ -186,7 +186,13 @@ http://localhost:3000
 
 # 🎥 Demo
 
-Will be available soon
+https://www.youtube.com/watch?v=T7NbUZdwXmo
+
+---
+
+# 📍 Live Site
+
+https://riverflowdev.vercel.app/
 
 ---
 
