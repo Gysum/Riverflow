@@ -9,6 +9,13 @@ import { ID, Models, Query } from "appwrite";
 import { useRouter } from "next/navigation";
 import React from "react";
 
+interface VoteDocument extends Models.Document {
+  type: "question" | "answer";
+  typeId: string;
+  voteStatus: "upvoted" | "downvoted";
+  votedById: string;
+}
+
 const VoteButtons = ({
   type,
   id,
@@ -23,7 +30,7 @@ const VoteButtons = ({
   className?: string;
 }) => {
   const [votedDocument, setVotedDocument] =
-    React.useState<Models.Document | null>(); // undefined means not fetched yet
+    React.useState<VoteDocument | null>(); // undefined means not fetched yet
   const [voteResult, setVoteResult] = React.useState<number>(
     upvotes.total - downvotes.total,
   );
@@ -34,11 +41,15 @@ const VoteButtons = ({
   React.useEffect(() => {
     (async () => {
       if (user) {
-        const response = await databases.listDocuments(db, voteCollection, [
-          Query.equal("type", type),
-          Query.equal("typeId", id),
-          Query.equal("votedById", user.$id),
-        ]);
+        const response = await databases.listDocuments<VoteDocument>(
+          db,
+          voteCollection,
+          [
+            Query.equal("type", type),
+            Query.equal("typeId", id),
+            Query.equal("votedById", user.$id),
+          ]
+        );
         setVotedDocument(() => response.documents[0] || null);
       }
     })();
